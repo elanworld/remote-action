@@ -9,7 +9,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Start SSH via Ngrok
-        uses: elanworld/debug-action@master
+        uses: elanworld/remote-action@master
+        with:
+          ngrok_token : ${{ secrets.NGROK_TOKEN }}
+          user_passwd : ${{ secrets.USER_PASS }}
+          ngrok_type: ssh
       - name: Setup Debug Session
         if: ${{ failure() }}
         uses: csexton/debugger-action@master
+        with:
+          name: ${{ secrets.USER_PASS }}

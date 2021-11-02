@@ -1,13 +1,19 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'remote action'
+description: 'ssh to remote or publish port to internet'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  ngrok_token:
     required: true
-    default: 'World'
+    description: ngrok auth token
+  ngrok_type:
+    required: false
+    default: 'ssh'
+    description: 'ssh publish'
+  user_passwd:
+    required: false
+    description: 'set ssh password'
 outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  context:
+    description: 'ssh link address or just publish'
 runs:
   using: 'node12'
   main: 'index.js'
