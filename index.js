@@ -40,7 +40,8 @@ async function  loop() {
         })
         timeout = timeout - loopTime;
         writeTime(timeout, timeoutFile)
-        console.log(timeout.toString())
+        console.log("time limit:", timeout.toString())
+        console.log("you can delay by run command echo $time > " + timeoutFile)
         runCmd('bash',[bashPath, 'show'])
     }
 }
