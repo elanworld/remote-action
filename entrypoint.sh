@@ -4,7 +4,7 @@
 show() {
     echo "=========================================="
     echo "connect: $(grep -o -E "url=(tcp)://(.+)" < .ngrok.log | sed "s/url=tcp:\/\//ssh $USER@/" | sed "s/:/ -p /")"
-    grep -o -E "url=(http|https)://(.+)" < a.log | sed "s/url=//"
+    grep -o -E "url=(http|https)://(.+)" < .ngrok.log | sed "s/url=//"
     echo "=========================================="
 }
 
