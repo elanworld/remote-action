@@ -1,5 +1,18 @@
 #!/bin/bash
 
+
+show() {
+    echo "=========================================="
+    echo "connect: $(grep -o -E "url=(tcp)://(.+)" < .ngrok.log | sed "s/url=tcp:\/\//ssh $USER@/" | sed "s/:/ -p /")"
+    grep -o -E "url=(http|https)://(.+)" < a.log | sed "s/url=//"
+    echo "=========================================="
+}
+
+if [ "$1" == "show" ]; then
+    show
+    exit
+fi
+
 if [[ -z "$INPUT_NGROK_TOKEN" ]]; then
   echo "Please set 'NGROK_TOKEN'"
   exit 2
@@ -31,21 +44,11 @@ else
   ./ngrok tcp 22 --log ".ngrok.log" &
 fi
 
-
 sleep 10
 HAS_ERRORS=$(grep "command failed" <.ngrok.log)
 
 if [[ -z "$HAS_ERRORS" ]]; then
-  echo "=========================================="
-  echo "connect: $(grep -o -E "(tcp|http|https)://(.+)" < .ngrok.log)"
-  echo "=========================================="
-  keepAliveFile=~/keepAlive
-  echo 'run touch ~/keepAlive to keep network alive'
-  sleep 600
-  while [ -f $keepAliveFile ]; do
-    sleep 10
-  done
-  exit
+  show
 else
   echo "$HAS_ERRORS"
   exit 4
