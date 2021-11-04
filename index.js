@@ -8,15 +8,15 @@ const fs = require('fs');
 
 let timeoutFile = path.join(os.homedir(),"timeLimit");
 let timeout = 600
-let loopTime = 10
+let loopTime = 30
 let bashPath = '/home/runner/work/_actions/elanworld/remote-action/master/entrypoint.sh'
 
 function runCmd(cmd, arg, options) {
     let process = childProcess.spawn(cmd, arg, options)
-    process.stdout?.on('data', function (data) {
+    process.stdout && process.stdout.on('data', function (data) {
         console.log(data.toString())
     });
-    process.stderr?.on('data', function (data) {
+    process.stderr && process.stderr.on('data', function (data) {
         console.log(data.toString())
     });
 }
