@@ -1,23 +1,28 @@
-# Hello world JavaScript action
+# remote service JavaScript action
 
-This action prints "Hello World" or "Hello" + the name of a person to greet to the log. To learn how this action was built, see "[Creating a JavaScript action](https://help.github.com/en/articles/creating-a-javascript-action)" in the GitHub Help documentation.
+this action is used to create a debug session in action,you can set the target what is ssh server or http server.
 
 ## Inputs
 
-### `who-to-greet`
-
-**Required** The name of the person to greet. Default `"World"`.
+### `ngrok_token`
+auth token from <a href=https://dashboard.ngrok.com/get-started/setup>ngrok<a>
+### `ngrok_type`
+ssh or http
+### `user_passwd`
+ssh link password when type match `ssh`
 
 ## Outputs
 
-### `time`
+### `link method command`
 
-The time we greeted you.
+
 
 ## Example usage
 
 ```yaml
-uses: actions/hello-world-javascript-action@main
-with:
-  who-to-greet: 'Mona the Octocat'
+- name: Start Service via Ngrok
+    uses: elanworld/remote-action@master
+    with:
+      ngrok_token : ${{ secrets.NGROK_TOKEN }}
+      user_passwd : ${{ secrets.USER_PASS }}
 ```
