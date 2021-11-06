@@ -1,4 +1,4 @@
-name: 'remote action'
+name: 'remote debug action'
 description: 'ssh to remote or publish port to internet'
 inputs:
   ngrok_token:
@@ -11,6 +11,10 @@ inputs:
   user_passwd:
     required: false
     description: 'set ssh password'
+  time_limit:
+    required: false
+    default: 600
+    description: 'service time limit'
 outputs:
   context:
     description: 'ssh link address or just publish'

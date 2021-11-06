@@ -1,6 +1,8 @@
-# remote service JavaScript action
+# remote debug or service action
 
 this action is used to create a debug session in action,you can set the target what is ssh server or http server.
+support macos,linux
+`todo support windows`
 
 ## Inputs
 
@@ -21,7 +23,7 @@ ssh link password when type match `ssh`
 
 ```yaml
 - name: Start Service via Ngrok
-    uses: elanworld/remote-action@master
+    uses: elanworld/remote-action@v2.0
     with:
       ngrok_token : ${{ secrets.NGROK_TOKEN }}
       user_passwd : ${{ secrets.USER_PASS }}

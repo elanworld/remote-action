@@ -7,9 +7,9 @@ const fs = require('fs');
 
 
 let timeoutFile = path.join(os.homedir(),"timeLimit");
-let timeout = 600
+let timeout = process.env.INPUT_TIME_LIMIT || 600
 let loopTime = 30
-let bashPath = '/home/runner/work/_actions/elanworld/remote-action/master/entrypoint.sh'
+let bashPath = require('path').resolve(__dirname, 'entrypoint.sh');
 
 function runCmd(cmd, arg, options) {
     let process = childProcess.spawn(cmd, arg, options)
@@ -40,11 +40,11 @@ async function  loop() {
         writeTimeFile(timeout, timeoutFile)
         console.log("time limit:", timeout.toString())
         console.log("you can delay by run command echo $time > " + timeoutFile)
-        runCmd('bash',[bashPath, 'show'])
+        runCmd('bash', [bashPath, 'show'])
     }
 }
 
-runCmd('bash',[bashPath], {
+runCmd('bash', [bashPath, os.platform()], {
     detached: true,
     stdio: "ignore"
 })
