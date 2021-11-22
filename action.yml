@@ -20,4 +20,4 @@ outputs:
     description: 'ssh link address or just publish'
 runs:
   using: 'node12'
-  main: 'index.js'
+  main: 'dist/index.js'
