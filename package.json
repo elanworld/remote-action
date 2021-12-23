@@ -1,10 +1,11 @@
 {
-  "name": "remote debug action",
+  "name": "remoteDebugAction",
   "version": "1.0.0",
   "description": "ssh to remote or publish port to internet.",
   "main": "index.js",
   "scripts": {
-    "build": "ncc build index.js",
+    "build": "tsc && ncc build lib/main.js",
+    "dev": "tsc && node lib/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,6 +21,13 @@
   "homepage": "https://github.com/elanworld/remote-action",
   "dependencies": {
     "@actions/core": "^1.1.0",
-    "@actions/github": "^1.1.0"
+    "@actions/github": "^1.1.0",
+    "node-stream-zip": "^1.15.0",
+    "os-utils": "0.0.14"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.10",
+    "@types/os-utils": "0.0.1",
+    "request": "^2.88.2"
   }
 }

@@ -4,13 +4,14 @@ inputs:
   ngrok_token:
     required: true
     description: ngrok auth token
-  ngrok_type:
-    required: false
-    default: 'ssh'
-    description: 'ssh publish'
   user_passwd:
     required: false
-    description: 'set ssh password'
+    default: remoteAction
+    description: 'set ssh password what you want'
+  forward_port:
+    required: false
+    default: 22
+    description: 'forward tcp port'
   time_limit:
     required: false
     default: 600
