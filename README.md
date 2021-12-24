@@ -1,30 +1,35 @@
-# remote debug or service action
+# github remote service linker
 
-this action is used to create a debug session in action,you can set the target what is ssh server or http server.
-support macos,linux
-`todo support windows`
+by this action,you can connect to github server what run windows,macos,linux.
+
 
 ## Inputs
+#### `ngrok_token`
 
-### `ngrok_token`
 auth token from <a href=https://dashboard.ngrok.com/get-started/setup>ngrok<a>
-### `ngrok_type`
-ssh or http
-### `user_passwd`
-ssh link password when type match `ssh`
+#### `user_passwd`
+
+set account`s login password
+#### `forward_port`
+
+the port you want to use
+```markdown
+example：
+linux ssh: 22
+windows remote desktop: 3389
+```
 
 ## Outputs
-
-### `link method command`
+`your connection link`
 
 
 
 ## Example usage
-
 ```yaml
 - name: Start Service via Ngrok
-    uses: elanworld/remote-action@v2.0
+    uses: elanworld/remote-action@v3.0
     with:
       ngrok_token : ${{ secrets.NGROK_TOKEN }}
       user_passwd : ${{ secrets.USER_PASS }}
 ```
+

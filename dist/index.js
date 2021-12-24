@@ -1014,7 +1014,7 @@ function unzip(file, out, func) {
         fs.mkdirSync(out, { recursive: true }, () => {
         });
     }
-    zip.on("ready", () => {
+    zip.on('ready', () => {
         zip.extract(null, out, (err, num) => {
             console.log(err ? err : `Extracted ${num} entries`);
             zip.close();
@@ -1030,27 +1030,26 @@ function downloadFile(uri, filename, callback) {
 exports.downloadFile = downloadFile;
 function writeFile(timeout, timeoutFile) {
     fs.writeFileSync(timeoutFile, timeout.toString(), {
-        encoding: "utf-8"
+        encoding: 'utf-8'
     });
 }
 function sleep(delay) {
     return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(""), delay);
+        setTimeout(() => resolve(''), delay);
     });
 }
 exports.sleep = sleep;
 function startNgrok(token, localPort) {
     return __awaiter(this, void 0, void 0, function* () {
-        let workDirectory = path_1.default.join(os_1.default.homedir(), "cache-work");
-        let fileUrl = "";
-        let platform = os_1.default.platform();
-        if (platform === 'linux') {
+        let workDirectory = path_1.default.join(os_1.default.homedir(), 'cache-work');
+        let fileUrl = '';
+        if (os_1.default.platform() === 'linux') {
             fileUrl = 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip';
         }
-        if (platform === 'win32') {
+        if (os_1.default.platform() === 'win32') {
             fileUrl = 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip';
         }
-        if (platform === 'darwin') {
+        if (os_1.default.platform() === 'darwin') {
             fileUrl = 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-darwin-amd64.zip';
         }
         const dirName = 'ngrok-stable';
@@ -1061,52 +1060,55 @@ function startNgrok(token, localPort) {
         }
         process.chdir(workDirectory);
         if (fs.existsSync(filename)) {
-            console.log("file exists:" + filename);
+            console.log('file exists:' + filename);
         }
         else {
-            yield syncProcess(resolve => downloadFile(fileUrl, filename, () => resolve("")));
+            yield syncProcess(resolve => downloadFile(fileUrl, filename, () => resolve('')));
         }
         if (!fs.existsSync(dirName)) {
-            yield syncProcess(resolve => unzip(filename, dirName, () => resolve("")));
+            yield syncProcess(resolve => unzip(filename, dirName, () => resolve('')));
             process.chdir(dirName);
         }
         else {
             process.chdir(dirName);
         }
-        let logFile = ".ngrok.log";
+        let logFile = '.ngrok.log';
         if (fs.existsSync(logFile)) {
             fs.rmSync(logFile);
         }
-        let frcExe = "./ngrok";
-        if (platform === 'win32') {
-            frcExe = "ngrok.exe";
+        let frcExe = './ngrok';
+        if (os_1.default.platform() === 'win32') {
+            frcExe = 'ngrok.exe';
         }
-        let buffer = child_process_1.default.execSync(frcExe + " authtoken " + token);
-        console.log(buffer.toString());
-        return runCmd(frcExe, ["tcp", String(localPort), "--log", logFile], {});
+        else {
+            child_process_1.default.execSync('chmod 777 ngrok');
+        }
+        child_process_1.default.execSync(frcExe + ' authtoken ' + token);
+        return runCmd(frcExe, ['tcp', String(localPort), '--log', logFile], {});
     });
 }
 function changePasswd(passwd) {
     if (os_1.default.platform() === 'linux') {
-        console.log(child_process_1.default.execSync("sudo passwd -d $USER").toString());
+        console.log(child_process_1.default.execSync('sudo passwd -d $USER').toString());
         let chpasswd = child_process_1.default.spawn('passwd');
-        chpasswd.stdin.write(passwd + "\n" + passwd + "\n");
+        chpasswd.stdin.write(passwd + '\n' + passwd + '\n');
         chpasswd.stdin.end();
         // add public key auth
         child_process_1.default.execSync("sudo sed -i -e 's#\\#StrictModes yes#StrictModes no#' /etc/ssh/sshd_config");
-        child_process_1.default.execSync("sudo systemctl restart ssh");
+        child_process_1.default.execSync('sudo systemctl restart ssh');
     }
     else if (os_1.default.platform() === 'win32') {
         let user = process.env.USERNAME;
-        child_process_1.default.execSync("net user " + user + " " + passwd);
+        child_process_1.default.execSync('net user ' + user + ' ' + passwd);
         child_process_1.default.execSync("wmic /namespace:\\\\root\\cimv2\\terminalservices path win32_terminalservicesetting where (__CLASS != \"\") call setallowtsconnections 1");
         child_process_1.default.execSync("wmic /namespace:\\\\root\\cimv2\\terminalservices path win32_tsgeneralsetting where (TerminalName ='RDP-Tcp') call setuserauthenticationrequired 0");
         child_process_1.default.execSync("reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\Terminal Server\" /v fSingleSessionPerUser /t REG_DWORD /d 0 /f");
     }
     else {
         let userAdd = path_1.default.resolve(__dirname, 'useradd.sh');
-        child_process_1.default.execSync("export USER=virtual");
-        child_process_1.default.execSync("sh " + userAdd + " $USER " + passwd);
+        child_process_1.default.execSync('export USER=virtual');
+        child_process_1.default.execSync('chmod 777 ' + userAdd);
+        child_process_1.default.execSync('sudo ' + userAdd + ' virtual ' + passwd);
     }
 }
 function loop(timeout, loopTime, fileSave, func) {
@@ -1114,10 +1116,11 @@ function loop(timeout, loopTime, fileSave, func) {
         writeFile(timeout, fileSave);
         while (timeout > 0) {
             yield sleep(loopTime * 1000);
-            let line = fs.readFileSync(fileSave, "utf-8");
+            let line = fs.readFileSync(fileSave, 'utf-8');
             timeout = parseInt(line) - loopTime;
-            console.log("time limit:", timeout.toString());
-            console.log("you can change it by run command: echo $second > " + fileSave);
+            console.log('time limit:', timeout.toString());
+            console.log('you can change it by run command: echo $second > ' + fileSave);
+            console.log('====================================');
             writeFile(timeout, fileSave);
             func();
         }
@@ -1125,21 +1128,24 @@ function loop(timeout, loopTime, fileSave, func) {
 }
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        let token = process.env["INPUT_NGROK_TOKEN"];
-        let passwd = process.env["INPUT_USER_PASSWD"];
-        let forwardPort = process.env["INPUT_FORWARD_PORT"];
-        let timeout = (process.env["INPUT_TIME_LIMIT"] || 30);
+        let token = process.env['INPUT_NGROK_TOKEN'];
+        let passwd = process.env['INPUT_USER_PASSWD'];
+        let forwardPort = process.env['INPUT_FORWARD_PORT'];
+        let timeout = (process.env['INPUT_TIME_LIMIT'] || 600);
         let loopTime = 20;
         if (!token) {
             throw new Error('please set NGROK_TOKEN');
         }
         let ngrokProcess = yield startNgrok(token, forwardPort);
         changePasswd(passwd);
-        yield loop(timeout, loopTime, path_1.default.join(os_1.default.homedir(), "timeLimit"), () => {
-            let lines = fs.readFileSync(".ngrok.log");
-            let match = lines.toString().match(".*url=tcp://(.*):(.*)");
-            let username = process.env.USERNAME;
-            console.log("Connect command:", "ssh " + username + "@" + match[1] + " -p " + match[2]);
+        yield loop(timeout, loopTime, path_1.default.join(os_1.default.homedir(), 'timeLimit'), () => {
+            let lines = fs.readFileSync('.ngrok.log');
+            let match = lines.toString().match('.*url=tcp://(.*):(.*)');
+            let username = os_1.default.userInfo().username;
+            if (os_1.default.platform()) {
+                username = 'virtual';
+            }
+            console.log('Connect command:', 'ssh ' + username + '@' + match[1] + ' -p ' + match[2]);
         });
         ngrokProcess.kill('SIGINT');
     });
