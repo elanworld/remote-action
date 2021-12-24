@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: windows-2022
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - name: Start Service via Ngrok
@@ -14,3 +14,4 @@ jobs:
           ngrok_token : ${{ secrets.NGROK_TOKEN }}
           user_passwd : ${{ secrets.USER_PASS }}
           forward_port: 3389
+          time_limit: 3600
